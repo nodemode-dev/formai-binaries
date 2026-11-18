@@ -1,0 +1,40 @@
+formcad-kernel {release}
+
+This program uses OpenCascade Technology. It makes use of, and is based on, facilities
+provided by the Open CASCADE Technology software (Open CASCADE Exception 1.0 to the GNU
+LGPL 2.1, see OCCT-EXCEPTION.txt).
+
+Licence texts in this archive
+  LGPL-2.1.txt         GNU Lesser General Public License, version 2.1
+  OCCT-EXCEPTION.txt   Open CASCADE exception, version 1.0
+
+Parts and their licences
+  OpenCascade Technology 8.0.1        LGPL-2.1-only with the Open CASCADE exception 1.0
+  cadquery-ocp-novtk 8.0.1.1.0        Apache-2.0 (bindings)
+  build123d 0.13.0                    Apache-2.0
+  rhino3dm 8.35.0                     MIT (with openNURBS, zlib, pybind11, nanobind, draco)
+  numpy, scipy, scikit-learn          BSD-3-Clause; their wheels carry libgfortran and libgomp
+                                      (GPL-3.0 with the GCC Runtime Library Exception) and
+                                      libquadmath (LGPL-2.1) as separate shared files
+  Python runtime and the other Python packages named in requirements.lock keep their own
+  licences; the full list with licences is in the CycloneDX file of this release.
+
+The OpenCascade wheel also bundles image libraries (among them libraw, libfreeimage, libjasper,
+libjpeg, libpng, libtiff, libwebp, freetype). Their licences and source are listed in
+SOURCES.md of the release; the worker uses none of them for FormCAD files.
+
+All LGPL libraries are shipped as separate shared files in the library folder next to the
+program and may be replaced by your own build of the same libraries.
+
+Written offer of source code
+
+The complete corresponding source of the LGPL libraries, the pinned package list
+(requirements.lock) and the source of the worker are on the release page that hosts this
+archive:
+
+  https://github.com/nodemode-dev/formai-binaries/releases/tag/occt-{release}
+  asset: occt-source-{release}.tar.gz
+
+If that page is not reachable, write to https://github.com/nodemode-dev/formai-binaries/issues
+and the source will be sent for no more than the cost of distribution. The offer is valid for
+at least three years after the last distribution of this binary.

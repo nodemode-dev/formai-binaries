@@ -1,0 +1,28 @@
+{
+  "schema": 2,
+  "program": "formcad-kernel",
+  "release": null,
+  "licence": "LGPL-2.1-only WITH OCCT-exception-1.0",
+  "documents": {},
+  "source": {
+    "upstream": [
+      {
+        "name": "OpenCascade Technology",
+        "version": "8.0.1",
+        "licence": "LGPL-2.1-only WITH OCCT-exception-1.0",
+        "url": "https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V8_0_1.tar.gz",
+        "sha256": null
+      },
+      {
+        "name": "cadquery-ocp-novtk",
+        "version": "8.0.1.1.0",
+        "licence": "Apache-2.0",
+        "url": "https://pypi.org/project/cadquery-ocp-novtk/8.0.1.1.0/",
+        "sha256": null
+      }
+    ],
+    "asset": null,
+    "lock": null
+  },
+  "targets": {}
+}
