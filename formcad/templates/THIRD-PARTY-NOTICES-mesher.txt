@@ -1,0 +1,33 @@
+formcad-mesher {release}
+
+This program uses Netgen and OpenCascade Technology (the build inside the netgen-occt
+package). It makes use of, and is based on, facilities provided by the Open CASCADE
+Technology software (Open CASCADE Exception 1.0 to the GNU LGPL 2.1).
+
+Licence texts in this archive
+  LGPL-2.1.txt         GNU Lesser General Public License, version 2.1
+  NETGEN-LICENSE.txt   licence text shipped with the netgen-mesher wheel (LGPL 2.1)
+
+Parts and their licences
+  Netgen 6.2.2608                     LGPL-2.1-only
+  OpenCascade Technology 7.8.1        LGPL-2.1-only with the Open CASCADE exception 1.0
+  numpy 2.5.4                         BSD-3-Clause
+
+The Netgen wheel carries GUI and MPI pieces (libnggui, libtogl, ng_mpich, ng_openmpi, X11
+helper libraries); the mesher never starts them. Their licences are named in SOURCES.md.
+
+All LGPL libraries are shipped as separate shared files in the library folder next to the
+program and may be replaced by your own build of the same libraries.
+
+Written offer of source code
+
+The complete corresponding source of the LGPL libraries, the pinned package list
+(requirements.lock) and the source of the worker are on the release page that hosts this
+archive:
+
+  https://github.com/nodemode-dev/formai-binaries/releases/tag/mesher-{release}
+  asset: mesher-source-{release}.tar.gz
+
+If that page is not reachable, write to https://github.com/nodemode-dev/formai-binaries/issues
+and the source will be sent for no more than the cost of distribution. The offer is valid for
+at least three years after the last distribution of this binary.

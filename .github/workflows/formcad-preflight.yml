@@ -1,0 +1,44 @@
+name: formcad-preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'formcad/**'
+      - '.github/workflows/formcad-preflight.yml'
+  pull_request:
+    paths:
+      - 'formcad/**'
+      - '.github/workflows/formcad-preflight.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  records:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: The app's copies of the records, when its repository is readable
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          repository: nodemode-dev/formCAD
+          path: formCAD
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Records are well formed and equal to the copies inside the app
+        run: |
+          if [ -d formCAD/backend/app/data ]; then
+            python formcad/tools/preflight.py --records formcad/records --app-data formCAD/backend/app/data
+          else
+            echo "::notice::nodemode-dev/formCAD is not readable from this workflow; the records were checked on their own"
+            python formcad/tools/preflight.py --records formcad/records
+          fi
+      - name: Licence texts are intact
+        run: |
+          sha256sum formcad/licences/*
+          grep -q "GNU LESSER GENERAL PUBLIC LICENSE" formcad/licences/LGPL-2.1.txt
+          grep -q "Open CASCADE exception" formcad/licences/OCCT-EXCEPTION.txt

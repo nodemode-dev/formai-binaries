@@ -51,6 +51,14 @@ exactly these. `FORMCUT_FFMPEG_RELEASE` points an app at a mirror holding the
 same files, and is then the only source. On disk the apps keep the install folder
 `formcut-binaries/ffmpeg-<release>`, so a build that is already installed is found.
 
+## Other apps
+
+This repository is being renamed formai-binaries, so that every form app pulls
+its binaries from one place. formCAD's worker releases, tagged `occt-<release>`
+and `mesher-<release>`, and their records live under `formcad/`; see
+[`formcad/README.md`](formcad/README.md). They never touch the `ffmpeg-<release>`
+releases above.
+
 ## Licences
 
 ffmpeg is built with `--disable-gpl --disable-nonfree`, so it is
