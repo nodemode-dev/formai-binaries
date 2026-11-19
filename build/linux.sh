@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds formcut's LGPL ffmpeg for x86_64 Linux from the pinned sources, as the
+# Builds the Form apps' LGPL ffmpeg for x86_64 Linux from the pinned sources, as the
 # shipped build was made, and adds NVIDIA NVENC for H.264 and HEVC: header-only
 # (nv-codec-headers, MIT), with the driver loaded at run time, so machines
 # without it are unaffected and formcut's test encode skips it there.

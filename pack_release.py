@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Pack formcut's LGPL ffmpeg builds into release archives, checked against the record.
+"""Pack the Form apps' LGPL ffmpeg builds into release archives, checked against the record.
 
     python pack_release.py --binaries path/to/binaries [--out dist] [--sources]
 
 --binaries is a folder holding ffmpeg-<triple>, ffprobe-<triple> and
-lib-<triple>/ for one or more targets, the way formcut's src-tauri/binaries
+lib-<triple>/ for one or more targets, the way FormCut's src-tauri/binaries
 does. Every file ffmpeg-licence.json records for a target has to be there with
 its SHA-256, or the run stops; a target with no files there is skipped and named.
 
@@ -12,7 +12,7 @@ Each archive is ffmpeg-lgpl-<version>-<triple>.tar.gz, one folder of the same
 name holding the target's files, the licence texts and the record. Archives are
 made reproducibly (sorted entries, fixed times and owners, no gzip timestamp),
 so packing the same files again gives the same bytes, and each is opened again
-and checked the way formcut's first-run fetch checks it.
+and checked the way the apps' first-run fetch checks it.
 
 With --sources, the upstream source tarballs the record names are downloaded
 and checked against their SHA-256, because the LGPL expects the source to be
@@ -83,7 +83,7 @@ def pack(folder: Path, triple: str, files: list[dict], version: str, out: Path) 
 
 
 def recheck(archive: Path, files: list[dict]) -> list[str]:
-    """Open the archive as formcut's fetch does and check every recorded file."""
+    """Open the archive as the apps' fetch does and check every recorded file."""
     with tempfile.TemporaryDirectory() as scratch:
         with tarfile.open(archive) as bundle:
             if hasattr(tarfile, "data_filter"):
@@ -114,11 +114,11 @@ def fetch_sources(record: dict, out: Path) -> list[Path]:
 
 def notes(record: dict, version: str, packed: list[str], skipped: list[str], sources: list[Path]) -> str:
     lines = [
-        f"# ffmpeg {version} (LGPL) for formcut",
+        f"# ffmpeg {version} (LGPL) for the Form apps",
         "",
         "Built with `--disable-gpl --disable-nonfree`: ffmpeg is LGPL-2.1-or-later, libopus and libvpx are BSD-3-Clause.",
-        "formcut fetches the archive for its machine on first run and checks every file against the SHA-256 in",
-        "`ffmpeg-licence.json`, which formcut carries; a file that differs means nothing is installed.",
+        "Each Form app fetches the archive for its machine on first run and checks every file against the SHA-256 in",
+        "`ffmpeg-licence.json`, which the app carries; a file that differs means nothing is installed.",
         "",
         "| Target | Archive | Minimum OS |",
         "| --- | --- | --- |",
@@ -146,7 +146,7 @@ def main() -> int:
             raise SystemExit(f"{document} here does not match the record")
     # The release name tags the GitHub release and names its archives; a rebuild
     # of the same FFmpeg gets its own (7.1.5-2) so a published release, which
-    # formcut pins, is never replaced. Without one, the FFmpeg version serves.
+    # the apps pin, is never replaced. Without one, the FFmpeg version serves.
     version = record.get("release") or record["source"]["ffmpeg"]["version"]
     args.out.mkdir(parents=True, exist_ok=True)
     packed, skipped = [], []

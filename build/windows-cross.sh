@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Cross-builds formcut's LGPL ffmpeg for x86_64 Windows with mingw-w64, from the
+# Cross-builds the Form apps' LGPL ffmpeg for x86_64 Windows with mingw-w64, from the
 # pinned sources in dist/, and adds the encoders that give H.264 and HEVC with no
 # GPL component:
 #
