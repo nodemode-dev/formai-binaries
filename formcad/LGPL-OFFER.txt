@@ -1,0 +1,38 @@
+Written offer of source code
+===========================
+
+The programs in the releases of formai-binaries (formcad-kernel and formcad-mesher) contain
+libraries that are free software under the GNU Lesser General Public License, version 2.1:
+
+  - OpenCascade Technology (with the Open CASCADE exception, version 1.0)
+  - Netgen
+  - other LGPL libraries bundled by the Python wheels inside the frozen programs
+    (for example libquadmath); each one is listed in THIRD-PARTY-NOTICES.txt
+
+You may obtain the complete corresponding source code of these libraries, the pinned list of
+Python packages used to build the program (requirements.lock), and the source of the worker
+program itself, from the same release page that hosts the binary:
+
+  https://github.com/nodemode-dev/formai-binaries/releases
+
+Each release carries its source as an asset next to the binaries:
+
+  occt-<release>/   occt-source-<release>.tar.gz   and   requirements.lock
+  mesher-<release>/ mesher-source-<release>.tar.gz and   requirements.lock
+
+If you cannot reach that page, write to us through
+
+  https://github.com/nodemode-dev/formai-binaries/issues
+
+and we will send the source on a physical medium or by download for no more than the cost of
+performing the distribution. This offer is valid for at least three years after the last time
+we distributed the corresponding binary, and the source asset stays on the release for that
+period. A published release is never replaced.
+
+The libraries are shipped as separate, replaceable shared files in the library folder next to
+the program. You may replace them with your own modified build of the same libraries, and you
+may reverse engineer the program as far as that is needed to debug such modifications.
+
+Anything in these archives that is not an LGPL library, including the FormCAD application,
+is covered by its own licence as named in THIRD-PARTY-NOTICES.txt and in the NOTICE.md of
+the FormCAD repository.

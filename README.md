@@ -41,6 +41,14 @@ formcut builds the download address as
 so the tag and the file names must be exactly these. `FORMCUT_FFMPEG_RELEASE`
 points formcut at a mirror holding the same files.
 
+## Other apps
+
+This repository is being renamed formai-binaries, so that every form app pulls
+its binaries from one place. formCAD's worker releases, tagged `occt-<release>`
+and `mesher-<release>`, and their records live under `formcad/`; see
+[`formcad/README.md`](formcad/README.md). They never touch the `ffmpeg-<release>`
+releases above.
+
 ## Licences
 
 ffmpeg is built with `--disable-gpl --disable-nonfree`, so it is
