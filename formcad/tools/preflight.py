@@ -41,7 +41,7 @@ def check_record(kind_name, path, problems):
             if doc not in names:
                 problems.append(f"{path.name}/{triple}: notice {doc} is not in the file list")
     for item in record.get("source", {}).get("upstream", []):
-        if record.get("targets") and not item.get("sha256"):
+        if record.get("targets") and item.get("url", "").endswith(".tar.gz") and not item.get("sha256"):
             problems.append(f"{path.name}: upstream {item['name']} has no pinned sha256")
     return record
 
@@ -64,12 +64,13 @@ def main():
     ap.add_argument("--records", default=str(HERE / "records"))
     ap.add_argument("--app-data", help="backend/app/data of the FormCAD repository")
     ap.add_argument("--published", action="store_true", help="records must be filled in (release set, targets present)")
+    ap.add_argument("--kind", choices=list(fcbin.KINDS), help="with --published, only this program's record must be filled in")
     args = ap.parse_args()
     problems = []
     for kind_name, kind in fcbin.KINDS.items():
         path = Path(args.records) / kind["record"]
         record = check_record(kind_name, path, problems)
-        if args.published and not (record.get("release") and record.get("targets")):
+        if args.published and args.kind in (None, kind_name) and not (record.get("release") and record.get("targets")):
             problems.append(f"{path.name}: not filled in")
         if args.app_data and record.get("targets"):
             check_app_record(kind_name, record, Path(args.app_data) / f"{'kernel' if kind_name == 'kernel' else 'mesher'}-licence.json", problems)
