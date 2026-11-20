@@ -1,14 +1,21 @@
-# formcut-binaries
+# formai-binaries
 
-The LGPL ffmpeg builds formcut uses, published as release archives, one per
-platform. formcut does not ship ffmpeg inside its installers: on first run, when
+The LGPL ffmpeg builds the Form apps use, published as release archives, one per
+platform. An app does not ship ffmpeg inside its installer: on first run, when
 no ffmpeg is found, it downloads the archive for its machine from a release
 here and checks every file against the SHA-256 recorded in
-[`ffmpeg-licence.json`](ffmpeg-licence.json), a copy of which formcut carries. If
+[`ffmpeg-licence.json`](ffmpeg-licence.json), a copy of which each app carries. If
 one file differs, nothing is installed.
 
+This repository was called `formcut-binaries` before, because FormCut was the
+first app to use it. The old address, `https://github.com/nodemode-dev/formcut-binaries`,
+keeps working, and builds made before the rename download from it, so release
+tags, file names and archive layout have not changed and never will for a
+published release. The apps that use these builds today are FormCut, FormDAM,
+FormEncoder, FormLit, FormTools, FormVFX, FormVis and FormWav.
+
 This repository holds text only. The binaries live on the
-[releases](https://github.com/nodemode-dev/formcut-binaries/releases) page, never
+[releases](https://github.com/nodemode-dev/formai-binaries/releases) page, never
 in the git history.
 
 ## What a release holds
@@ -36,10 +43,13 @@ ffmpeg-lgpl-7.1.5-<triple>/
   ffmpeg-licence.json
 ```
 
-formcut builds the download address as
-`https://github.com/nodemode-dev/formcut-binaries/releases/download/ffmpeg-<version>/ffmpeg-lgpl-<version>-<triple>.tar.gz`,
-so the tag and the file names must be exactly these. `FORMCUT_FFMPEG_RELEASE`
-points formcut at a mirror holding the same files.
+An app builds the download address as
+`https://github.com/nodemode-dev/formai-binaries/releases/download/ffmpeg-<version>/ffmpeg-lgpl-<version>-<triple>.tar.gz`,
+and tries the same path under `nodemode-dev/formcut-binaries` if that fails (builds
+made before the rename try only that one), so the tag and the file names must be
+exactly these. `FORMCUT_FFMPEG_RELEASE` points an app at a mirror holding the
+same files, and is then the only source. On disk the apps keep the install folder
+`formcut-binaries/ffmpeg-<release>`, so a build that is already installed is found.
 
 ## Other apps
 
@@ -56,8 +66,8 @@ ffmpeg is built with `--disable-gpl --disable-nonfree`, so it is
 built into libavcodec, are **BSD-3-Clause**
 ([`THIRD-PARTY-NOTICES.txt`](THIRD-PARTY-NOTICES.txt)). The libraries are shared
 and found through a relative path, so they can be replaced, as the LGPL
-requires. formcut runs ffmpeg as a separate program, which is why formcut
-itself stays Apache-2.0. The exact source is attached to each release, and the
+requires. Each app runs ffmpeg as a separate program, which is why an app
+that is Apache-2.0 stays so. The exact source is attached to each release, and the
 record names every upstream download, its SHA-256 and the configure line of
 each target.
 
@@ -65,10 +75,10 @@ The scripts and documents of this repository are Apache-2.0 ([`LICENSE`](LICENSE
 
 ## Publishing a build
 
-1. Put the builds in one folder the way formcut's `src-tauri/binaries` holds
+1. Put the builds in one folder the way FormCut's `src-tauri/binaries` holds
    them: `ffmpeg-<triple>`, `ffprobe-<triple>` and `lib-<triple>/` per target.
-2. Copy formcut's `src-tauri/binaries/ffmpeg-licence.json` here if it changed.
-   It must be the record formcut ships, since that is what the fetch checks.
+2. Copy FormCut's `src-tauri/binaries/ffmpeg-licence.json` here if it changed.
+   It must be the record the apps ship, since that is what the fetch checks.
 3. Pack and check:
 
    ```
@@ -78,18 +88,18 @@ The scripts and documents of this repository are Apache-2.0 ([`LICENSE`](LICENSE
    Every recorded file must match its SHA-256 or nothing is packed. The
    archives are reproducible, so packing the same files again gives the same
    hashes. The results go to `dist/`, which git ignores.
-4. Publish, as a release rather than a draft, since formcut downloads
+4. Publish, as a release rather than a draft, since the apps download
    anonymously:
 
    ```
-   gh release create ffmpeg-7.1.5 dist/* --title "ffmpeg 7.1.5 (LGPL) for formcut" --notes-file dist/RELEASE_NOTES.md
+   gh release create ffmpeg-7.1.5 dist/* --title "ffmpeg 7.1.5 (LGPL) for the Form apps" --notes-file dist/RELEASE_NOTES.md
    ```
 
    or on github.com: Releases, Draft a new release, tag `ffmpeg-7.1.5`, attach
    everything in `dist/`, Publish.
 
-Never replace an asset under a tag that has been published. formcut pins every
-file by hash, so a changed build goes out as a new record in formcut and a new
+Never replace an asset under a tag that has been published. The apps pin every
+file by hash, so a changed build goes out as a new record in the apps and a new
 tag here.
 
 ## Checking a download
