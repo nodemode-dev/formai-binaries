@@ -1,7 +1,20 @@
 # formai-binaries
 
-The LGPL ffmpeg builds the Form apps use, published as release archives, one per
-platform. An app does not ship ffmpeg inside its installer: on first run, when
+The programs the Form apps depend on and do not carry in their installers,
+published as release archives for every app of the family to download and
+verify when it needs them. Today it holds two sets:
+
+- **ffmpeg**, the LGPL builds the media apps use, one archive per platform.
+  The rest of this page describes them.
+- **FormCAD's 3D workers**, the two LGPL programs behind its geometry kernel
+  and its mesher. They have their own folder and page: [`formcad/`](formcad/README.md).
+
+A dependency another Form app needs later gets its own folder and its own
+release tags here in the same way.
+
+## ffmpeg
+
+An app does not ship ffmpeg inside its installer: on first run, when
 no ffmpeg is found, it downloads the archive for its machine from a release
 here and checks every file against the SHA-256 recorded in
 [`ffmpeg-licence.json`](ffmpeg-licence.json), a copy of which each app carries. If
