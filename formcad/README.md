@@ -24,7 +24,7 @@ The paths below are relative to `formcad/`.
 | `tools/` | `stage_notices.py`, `update_record.py`, `pack_release.py`, `merge_records.py`, `preflight.py` (standard library only, Python 3.12) |
 | `../.github/workflows/formcad-preflight.yml` | record checks, including equality with the copies inside the app; it runs only when `formcad/**` or the workflow itself changes, and it checks out `nodemode-dev/formCAD` to compare, which needs read access to that repository |
 
-The build workflow lives in the FormCAD repository (`.github/workflows/binaries.yml`) because it freezes the programs from FormCAD's own source. It builds one archive per triple on native runners (ubuntu-22.04 for a glibc 2.35 floor), signs, records, merges the records, writes `SHA256SUMS`, the source asset and `RELEASE_NOTES.md`, and creates a draft release in `nodemode-dev/formai-binaries`.
+The build workflow lives in formcompiler (`.github/workflows/binaries.yml` there), where the family's signing values are; it checks the FormCAD repository out and freezes the programs from FormCAD's own source with FormCAD's own scripts. It builds one archive per triple on native runners (ubuntu-22.04 for a glibc 2.35 floor), signs, records, merges the records, writes `SHA256SUMS`, the source asset and `RELEASE_NOTES.md`, and creates a draft release in `nodemode-dev/formai-binaries`.
 
 ## An archive
 
