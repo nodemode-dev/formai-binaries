@@ -23,11 +23,11 @@ def main():
     for name in kind["documents"]:
         if name == "THIRD-PARTY-NOTICES.txt":
             template = (HERE / "templates" / f"THIRD-PARTY-NOTICES-{args.kind}.txt").read_text(encoding="utf-8")
-            (stage / name).write_text(template.format(**values), encoding="utf-8")
+            (stage / name).write_text(template.format(**values), encoding="utf-8", newline="\n")
         else:
             shutil.copyfile(HERE / "licences" / name, stage / name)
     readme = (HERE / "templates" / kind["readme"]).read_text(encoding="utf-8")
-    (stage / "README.md").write_text(readme.format(**values), encoding="utf-8")
+    (stage / "README.md").write_text(readme.format(**values), encoding="utf-8", newline="\n")
     shutil.copyfile(HERE / "LGPL-OFFER.txt", stage / "LGPL-OFFER.txt")
     print(f"notices written into {stage}")
 
