@@ -252,3 +252,73 @@ def test_missing_app_copy_is_reported(check, records, tmp_path):
     result = check(records, app=app)
     rejected(result)
     assert f"{tmp_path / 'app-data' / 'mesher-licence.json'} is missing" in result.stdout
+
+
+def unfill(record):
+    record["release"] = ""
+    record["targets"] = {}
+
+
+def test_published_passes_when_every_record_is_filled(check, records):
+    result = check(records, extra=["--published"])
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "preflight passed" in result.stdout
+
+
+@pytest.mark.parametrize("kind", ["kernel", "mesher"])
+def test_published_fails_for_an_unfilled_record_and_names_it(check, records, kind):
+    unfill(records[kind])
+    result = check(records, extra=["--published"])
+    rejected(result, f"{KINDS[kind]['record']}: not filled in")
+    other = "mesher" if kind == "kernel" else "kernel"
+    assert KINDS[other]["record"] not in result.stdout
+
+
+def test_published_fails_when_only_the_targets_are_missing(check, records):
+    records["kernel"]["targets"] = {}
+    rejected(check(records, extra=["--published"]), "occt-licence.json: not filled in")
+
+
+def test_published_fails_when_only_the_release_is_empty(check, records):
+    records["mesher"]["release"] = ""
+    rejected(check(records, extra=["--published"]), "mesher-licence.json: not filled in")
+
+
+def test_unfilled_record_passes_without_published(check, records):
+    unfill(records["kernel"])
+    result = check(records)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_published_with_a_kind_ignores_an_unfilled_record_of_the_other_kind(check, records):
+    unfill(records["kernel"])
+    result = check(records, extra=["--published", "--kind", "mesher"])
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "preflight passed" in result.stdout
+
+
+def test_published_with_a_kind_ignores_an_unfilled_mesher_record_for_kernel(check, records):
+    unfill(records["mesher"])
+    result = check(records, extra=["--published", "--kind", "kernel"])
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("kind", ["kernel", "mesher"])
+def test_published_with_a_kind_still_requires_that_kinds_record(check, records, kind):
+    unfill(records[kind])
+    result = check(records, extra=["--published", "--kind", kind])
+    rejected(result, f"{KINDS[kind]['record']}: not filled in")
+
+
+def test_published_with_a_kind_reports_only_that_kinds_record(check, records):
+    unfill(records["kernel"])
+    unfill(records["mesher"])
+    result = check(records, extra=["--published", "--kind", "kernel"])
+    rejected(result, "occt-licence.json: not filled in")
+    assert "mesher-licence.json" not in result.stdout
+
+
+def test_kind_without_published_changes_nothing(check, records):
+    unfill(records["kernel"])
+    result = check(records, extra=["--kind", "mesher"])
+    assert result.returncode == 0, result.stdout + result.stderr

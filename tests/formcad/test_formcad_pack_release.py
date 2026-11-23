@@ -508,3 +508,40 @@ def test_real_records_are_not_changed_by_these_tests(repo_root, build, run_tool,
     assert result.returncode == 0, result.stderr
     assert {p.name: p.read_bytes() for p in records} == before
     assert sorted(before) == ["mesher-licence.json", "occt-licence.json"]
+
+
+def test_no_subcommand_is_refused_with_a_usage_message(run_tool):
+    result = run_tool(TOOL)
+    assert result.returncode == 2
+    assert result.stderr.startswith("usage:")
+    assert "cmd" in result.stderr
+    assert "required" in result.stderr
+    assert result.stdout == ""
+
+
+def test_pack_into_an_existing_output_folder_works(build, run_tool):
+    build.out.mkdir()
+    (build.out / "keep.txt").write_text("already here\n", encoding="utf-8")
+    result = run_tool(TOOL, *build.args("pack", "--lock", build.lock))
+    assert result.returncode == 0, result.stderr
+    assert (build.out / build.archive_name).is_file()
+    assert (build.out / "SHA256SUMS").is_file()
+    assert (build.out / "keep.txt").read_text(encoding="utf-8") == "already here\n"
+
+
+def test_pack_into_an_existing_output_folder_gives_the_same_archive_as_a_new_one(build, run_tool, tmp_path):
+    first = run_tool(TOOL, *build.args("pack", "--lock", build.lock))
+    assert first.returncode == 0, first.stderr
+    reference = (build.out / build.archive_name).read_bytes()
+    build.out = tmp_path / "existing-out"
+    build.out.mkdir()
+    second = run_tool(TOOL, *build.args("pack", "--lock", build.lock))
+    assert second.returncode == 0, second.stderr
+    assert (build.out / build.archive_name).read_bytes() == reference
+
+
+def test_pack_creates_a_missing_nested_output_folder(build, run_tool, tmp_path):
+    build.out = tmp_path / "deep" / "er" / "out"
+    result = run_tool(TOOL, *build.args("pack", "--lock", build.lock))
+    assert result.returncode == 0, result.stderr
+    assert (build.out / build.archive_name).is_file()

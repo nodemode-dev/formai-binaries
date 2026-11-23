@@ -397,3 +397,58 @@ def test_running_the_copy_leaves_the_repository_record_alone(record_run, repo_ro
     assert record_run(folder, LINUX).returncode == 0
     assert sha(repo_root / "ffmpeg-licence.json") == before
     assert sha(tool / "ffmpeg-licence.json") != before
+
+
+def test_missing_triple_fails_with_a_usage_message_and_keeps_the_record(run_tool, tool, tool_env, tmp_path):
+    before = (tool / "ffmpeg-licence.json").read_bytes()
+    folder = stage(tmp_path, LINUX)
+    proc = run_tool(
+        tool / "update_record.py", "--binaries", folder, "--release", "7.1.5-2", "--toolchain", "gcc",
+        cwd=tool.parent, env=tool_env,
+    )
+    assert proc.returncode == 2
+    assert proc.stderr.startswith("usage:")
+    assert "--triple" in proc.stderr
+    assert "required" in proc.stderr
+    assert proc.stdout == ""
+    assert (tool / "ffmpeg-licence.json").read_bytes() == before
+
+
+def test_written_record_is_indented_by_two_spaces_like_the_shipped_one(record_run, repo_root, tool, tmp_path):
+    shipped_text = (repo_root / "ffmpeg-licence.json").read_text(encoding="utf-8")
+    assert shipped_text.startswith('{\n  "')
+    folder = stage(tmp_path, LINUX)
+    assert record_run(folder, LINUX).returncode == 0
+    text = (tool / "ffmpeg-licence.json").read_text(encoding="utf-8")
+    assert text.startswith('{\n  "')
+    assert json.dumps(json.loads(text), indent=2, ensure_ascii=False) + "\n" == text
+    lines = text.splitlines()
+    indents = {len(line) - len(line.lstrip(" ")) for line in lines}
+    assert all(width % 2 == 0 for width in indents)
+    assert 4 in indents
+    assert "\t" not in text
+
+
+def test_written_record_ends_with_exactly_one_newline(record_run, tool, tmp_path):
+    folder = stage(tmp_path, LINUX)
+    assert record_run(folder, LINUX).returncode == 0
+    raw = (tool / "ffmpeg-licence.json").read_bytes()
+    assert raw.endswith(b"}\n")
+    assert not raw.endswith(b"\n\n")
+    assert b"\r" not in raw
+
+
+def test_written_record_keeps_a_non_ascii_character_as_itself(run_tool, tool, tool_env, tmp_path):
+    folder = stage(tmp_path, LINUX)
+    toolchain = "gcc 11.4.0 café µ"
+    proc = run_tool(
+        tool / "update_record.py", "--binaries", folder, "--triple", LINUX, "--release", "7.1.5-2",
+        "--toolchain", toolchain, "--check", "réussi",
+        cwd=tool.parent, env=tool_env,
+    )
+    assert proc.returncode == 0, proc.stderr
+    raw = (tool / "ffmpeg-licence.json").read_bytes()
+    assert "café µ".encode("utf-8") in raw
+    assert "réussi".encode("utf-8") in raw
+    assert b"\\u00" not in raw
+    assert load_record(tool)["targets"][LINUX]["toolchain"] == toolchain

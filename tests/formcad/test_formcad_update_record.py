@@ -431,3 +431,23 @@ def test_result_passes_preflight(tmp_path, repo_root, update, run_tool):
     assert "preflight passed" in check.stdout
     for name, content in originals.items():
         assert (repo_root / "formcad" / "records" / name).read_bytes() == content
+
+
+def test_missing_triple_fails_with_a_usage_message_and_keeps_the_record(kernel_run, update):
+    stage, record, _ = kernel_run
+    before = record.read_bytes()
+    result = update("--kind", "kernel", "--record", str(record), "--stage", str(stage), "--release", "8.0.2")
+    assert result.returncode == 2
+    assert result.stderr.startswith("usage:")
+    assert "--triple" in result.stderr
+    assert "required" in result.stderr
+    assert result.stdout == ""
+    assert record.read_bytes() == before
+
+
+def test_missing_triple_creates_no_record(tmp_path, repo_root, update):
+    stage = make_stage(tmp_path / "stage", repo_root)
+    record = tmp_path / "occt-licence.json"
+    result = update("--kind", "kernel", "--record", str(record), "--stage", str(stage), "--release", "8.0.1")
+    assert result.returncode != 0
+    assert not record.exists()
