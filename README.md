@@ -121,3 +121,15 @@ tag here.
 sha256sum -c SHA256SUMS              # Linux
 shasum -a 256 -c SHA256SUMS          # macOS
 ```
+
+## Tests
+
+```
+pip install -r tests/requirements.txt
+python3 -m pytest
+```
+
+The tests cover the ffmpeg release tools, the FormCAD record tools, the build
+scripts (nothing is built or downloaded) and the records and licence texts as
+they stand. `tests/README.md` says what each file tests and what a test must
+do. The `tests` workflow runs them on every pull request and on `main`.
